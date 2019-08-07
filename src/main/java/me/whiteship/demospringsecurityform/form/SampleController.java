@@ -1,9 +1,13 @@
 package me.whiteship.demospringsecurityform.form;
 
+import me.whiteship.demospringsecurityform.account.Account;
 import me.whiteship.demospringsecurityform.account.AccountContext;
 import me.whiteship.demospringsecurityform.account.AccountRepository;
+import me.whiteship.demospringsecurityform.account.UserAccount;
+import me.whiteship.demospringsecurityform.common.CurrentUser;
 import me.whiteship.demospringsecurityform.common.SecurityLogger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,11 +25,11 @@ public class SampleController {
     @Autowired AccountRepository accountRepository;
 
     @GetMapping("/")
-    public String index(Model model, Principal principal) {
-        if (principal == null) {
+    public String index(Model model, @CurrentUser Account account) {
+        if (account == null) {
             model.addAttribute("message", "Hello Spring Security");
         } else {
-            model.addAttribute("message", "Hello, " + principal.getName());
+            model.addAttribute("message", "Hello, " + account.getUsername());
         }
 
         return "index";
